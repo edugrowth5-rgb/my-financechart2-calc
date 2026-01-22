@@ -1,4 +1,4 @@
-const CACHE_NAME = 'citizen-pro-v6-english'; // Version Updated
+const CACHE_NAME = 'citizen-pro-v7-english'; // Version Updated
 const assets = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (e) => {
