@@ -10,52 +10,37 @@
         :root { --bg: #0a0a0a; --card: #111; --text: #fff; --primary: #00ffcc; --accent: #cc66ff; --border: #333; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; touch-action: manipulation; }
         
-        /* Navigation */
-        .nav { width: 100%; display: flex; justify-content: center; gap: 10px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav button { padding: 10px 18px; border: none; border-radius: 20px; background: var(--border); color: var(--text); cursor: pointer; font-weight: bold; font-size: 14px !important; }
+        .nav { width: 100%; display: flex; justify-content: center; gap: 8px; padding: 12px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav button { padding: 10px 15px; border: none; border-radius: 20px; background: var(--border); color: var(--text); cursor: pointer; font-weight: bold; font-size: 14px !important; }
         .nav button.active { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); }
 
-        .page { display: none; width: 95%; max-width: 380px; padding: 20px 10px; animation: fadeIn 0.4s; }
+        .page { display: none; width: 95%; max-width: 380px; padding: 15px 5px; animation: fadeIn 0.4s; }
         .active-page { display: block; }
 
-        /* Calculator Display */
-        .calculator { background: #000; padding: 15px; border-radius: 25px; border: 3px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .display-container { position: relative; background: #111; border: 2px solid var(--primary); border-radius: 12px; margin-bottom: 15px; }
-        #display { width: 100%; height: 85px; font-size: 38px !important; text-align: right; padding: 25px 15px 5px 15px; background: transparent; color: var(--primary); border: none; outline: none; font-family: monospace; box-sizing: border-box; }
+        .calculator { background: #000; padding: 12px; border-radius: 20px; border: 2px solid var(--border); }
+        .display-container { position: relative; background: #111; border: 2px solid var(--primary); border-radius: 10px; margin-bottom: 12px; }
+        #display { width: 100%; height: 80px; font-size: 36px !important; text-align: right; padding: 25px 12px 5px 12px; background: transparent; color: var(--primary); border: none; outline: none; font-family: monospace; box-sizing: border-box; }
+        #mem-ind { position: absolute; top: 5px; left: 10px; color: var(--accent); font-size: 12px; visibility: hidden; }
         
-        /* MAIN BUTTONS - Font Size increased to 22px */
-        .buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        /* Buttons Grid - 5 columns for Memory & Scientific */
+        .buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
         button { 
-            height: 55px !important; /* बटन की हाइट बढ़ा दी */
-            cursor: pointer; 
-            border: none; 
-            border-radius: 10px; 
-            background: #1a1a1a; 
-            color: white; 
-            font-weight: bold !important; 
-            font-size: 22px !important; /* फॉन्ट साइज बढ़ा दिया */
-            transition: 0.1s;
+            height: 52px !important; 
+            cursor: pointer; border: none; border-radius: 8px; 
+            background: #1a1a1a; color: white; font-weight: bold !important; 
+            font-size: 20px !important; transition: 0.1s;
         }
-        button:active { transform: scale(0.9); filter: brightness(1.5); }
+        button:active { transform: scale(0.9); background: #333; }
         
         .btn-red { color: #ff4d4d !important; border: 1px solid #ff4d4d !important; }
         .btn-orange { color: #ffa500 !important; border: 1px solid #ffa500 !important; }
-        .btn-equal { background: var(--primary) !important; color: #000 !important; font-size: 26px !important; }
+        .btn-equal { background: var(--primary) !important; color: #000 !important; font-size: 24px !important; }
 
-        /* CATEGORY BUTTONS - Font Size increased to 14px */
-        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 15px; }
-        .cat-btn { 
-            font-size: 14px !important; 
-            height: 40px !important; 
-            border-radius: 8px; 
-            border: 1px solid #444; 
-            color: #fff; 
-            font-weight: bold !important;
-        }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 12px; }
+        .cat-btn { font-size: 13px !important; height: 38px !important; border-radius: 6px; border: 1px solid #444; color: #fff; }
 
-        /* Dashboard Styles */
-        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; margin-bottom: 15px; }
-        .history-list { max-height: 180px; overflow-y: auto; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 13px !important; border: 1px solid var(--border); text-align: left; }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); text-align: center; margin-bottom: 12px; }
+        .history-list { max-height: 160px; overflow-y: auto; background: #000; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 13px; border: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -68,6 +53,7 @@
 <div id="calc-page" class="page active-page">
     <div class="calculator">
         <div class="display-container">
+            <span id="mem-ind">M</span>
             <input type="text" id="display" value="0" readonly>
         </div>
         <div class="buttons">
@@ -77,10 +63,24 @@
             <button class="btn-orange" onclick="markUP()">MU</button>
             <button class="btn-red" onclick="clearAll()">AC</button>
 
-            <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('%')">%</button><button class="btn-orange" onclick="press('/')">÷</button>
-            <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="plusMinus()">+/-</button><button class="btn-orange" onclick="press('*')">×</button>
-            <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button class="btn-equal" style="grid-row: span 2; height: auto !important;" onclick="calculate()">=</button><button class="btn-orange" onclick="press('-')">-</button>
-            <button onclick="press('0')">0</button><button onclick="press('00')">00</button><button onclick="press('.')">.</button><button class="btn-orange" onclick="press('+')">+</button>
+            <button class="btn-orange" onclick="mPlus()">M+</button>
+            <button class="btn-orange" onclick="mMinus()">M-</button>
+            <button class="btn-orange" onclick="mCheck()">MRC</button>
+            <button class="btn-orange" onclick="scientific('sqrt')">√</button>
+            <button class="btn-red" onclick="backspace()">⌫</button>
+
+            <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button>
+            <button onclick="press('%')">%</button><button class="btn-orange" onclick="press('/')">÷</button>
+            
+            <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button>
+            <button onclick="plusMinus()">+/-</button><button class="btn-orange" onclick="press('*')">×</button>
+            
+            <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button>
+            <button class="btn-equal" style="grid-row: span 2; height: auto !important;" onclick="calculate()">=</button>
+            <button class="btn-orange" onclick="press('-')">-</button>
+            
+            <button onclick="press('0')">0</button><button onclick="press('00')">00</button><button onclick="press('.')">.</button>
+            <button class="btn-orange" onclick="press('+')">+</button>
         </div>
 
         <div class="category-grid">
@@ -95,44 +95,73 @@
 </div>
 
 <div id="dash-page" class="page">
-    <div class="stat-card">
-        <canvas id="myChart"></canvas>
-    </div>
+    <div class="stat-card"><canvas id="myChart"></canvas></div>
     <div style="display: flex; gap: 10px;">
-        <div class="stat-card" style="flex: 1;"><h3>Income</h3><p id="dash-in" style="color: var(--primary); font-size: 20px;">₹0</p></div>
-        <div class="stat-card" style="flex: 1;"><h3>Expenses</h3><p id="dash-gt" style="color: #ff4d4d; font-size: 20px;">₹0</p></div>
+        <div class="stat-card" style="flex: 1;"><h3>Income</h3><p id="dash-in" style="color: var(--primary); font-size: 18px;">₹0</p></div>
+        <div class="stat-card" style="flex: 1;"><h3>Expenses</h3><p id="dash-gt" style="color: #ff4d4d; font-size: 18px;">₹0</p></div>
     </div>
     <div class="history-list" id="history-list"></div>
-    <button style="width:100%; padding:15px; background:#28a745; color:white; border-radius:10px; border:none; margin-top: 15px; font-weight: bold; font-size: 16px;" onclick="exportData()">Export CSV</button>
-    <button style="width:100%; margin-top:10px; padding:10px; background:transparent; color:#ff4d4d; border:1px solid #ff4d4d; border-radius:10px; font-size: 14px;" onclick="resetStorage()">Reset All Data</button>
+    <button style="width:100%; padding:12px; background:#28a745; color:white; border-radius:10px; border:none; margin-top: 10px; font-weight: bold;" onclick="exportData()">Export CSV</button>
+    <button style="width:100%; margin-top:10px; padding:8px; background:transparent; color:#ff4d4d; border:1px solid #ff4d4d; border-radius:10px;" onclick="resetStorage()">Reset All Data</button>
 </div>
 
 <script>
     let income = parseFloat(localStorage.getItem('income')) || 0;
     let expenseTotal = parseFloat(localStorage.getItem('expenseTotal')) || 0;
     let historyLog = JSON.parse(localStorage.getItem('historyLog')) || [];
+    let mMemory = parseFloat(localStorage.getItem('mMemory')) || 0;
     let shouldReset = false, myChart = null, checkIndex = -1;
     const display = document.getElementById('display');
+    const mInd = document.getElementById('mem-ind');
 
-    function speak(t) { const m = new SpeechSynthesisUtterance(t); m.rate = 1.3; window.speechSynthesis.speak(m); }
-    function switchPage(p) {
-        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
-        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-        document.getElementById(p + '-page').classList.add('active-page');
-        document.getElementById('nav-' + p).classList.add('active');
-        if(p === 'dash') updateChart();
+    function speak(t) { const m = new SpeechSynthesisUtterance(t); m.rate = 1.4; window.speechSynthesis.speak(m); }
+    
+    function updateUI() {
+        document.getElementById('dash-in').innerText = "₹" + income.toFixed(2);
+        document.getElementById('dash-gt').innerText = "₹" + expenseTotal.toFixed(2);
+        document.getElementById('history-list').innerHTML = historyLog.map(h => `<div style="padding:6px; border-bottom:1px solid #222">${h}</div>`).join('');
+        mInd.style.visibility = mMemory !== 0 ? "visible" : "hidden";
+        localStorage.setItem('income', income);
+        localStorage.setItem('expenseTotal', expenseTotal);
+        localStorage.setItem('historyLog', JSON.stringify(historyLog));
+        localStorage.setItem('mMemory', mMemory);
     }
+
     function press(v) { 
         if (shouldReset) { display.value = ""; shouldReset = false; }
         if (display.value === "0" && v !== "." && v !== "00") display.value = "";
         display.value += v;
     }
+
     function calculate() {
         try {
             let res = eval(display.value.replace(/×/g, '*').replace(/÷/g, '/'));
             display.value = res; shouldReset = true; speak(res);
-        } catch { display.value = "Error"; }
+            return res;
+        } catch { display.value = "Error"; return 0; }
     }
+
+    // --- Memory Functions ---
+    function mPlus() { let v = calculate(); mMemory += v; updateUI(); }
+    function mMinus() { let v = calculate(); mMemory -= v; updateUI(); }
+    function mCheck() { display.value = mMemory; shouldReset = true; }
+
+    // --- Check Forward/Backward Fix ---
+    function checkForward() {
+        if (historyLog.length > 0) {
+            checkIndex = (checkIndex + 1) % historyLog.length;
+            display.value = historyLog[checkIndex].match(/₹([\d.]+)/)[1];
+            shouldReset = true;
+        }
+    }
+    function checkBackward() {
+        if (historyLog.length > 0) {
+            checkIndex = (checkIndex - 1 + historyLog.length) % historyLog.length;
+            display.value = historyLog[checkIndex].match(/₹([\d.]+)/)[1];
+            shouldReset = true;
+        }
+    }
+
     function saveEntry(cat, type) {
         let val = parseFloat(display.value);
         if (isNaN(val) || val === 0) return alert("Enter value!");
@@ -141,14 +170,22 @@
         historyLog.unshift(`${time} - ${cat}: ₹${val} (${type.toUpperCase()})`);
         updateUI(); speak(val + " saved"); display.value = "0"; shouldReset = true;
     }
-    function updateUI() {
-        document.getElementById('dash-in').innerText = "₹" + income.toFixed(2);
-        document.getElementById('dash-gt').innerText = "₹" + expenseTotal.toFixed(2);
-        document.getElementById('history-list').innerHTML = historyLog.map(h => `<div style="padding:8px; border-bottom:1px solid #222">${h}</div>`).join('');
-        localStorage.setItem('income', income);
-        localStorage.setItem('expenseTotal', expenseTotal);
-        localStorage.setItem('historyLog', JSON.stringify(historyLog));
+
+    function backspace() { display.value = display.value.slice(0, -1) || "0"; }
+    function scientific(t) { if(t==='sqrt') display.value = Math.sqrt(eval(display.value)).toFixed(2); shouldReset=true; }
+    function clearAll() { display.value = "0"; mMemory = 0; updateUI(); }
+    function showGT() { display.value = expenseTotal; shouldReset = true; }
+    function plusMinus() { display.value = display.value.startsWith("-") ? display.value.slice(1) : "-" + display.value; }
+    function markUP() { display.value = (parseFloat(display.value) / 0.9).toFixed(2); shouldReset = true; }
+
+    function switchPage(p) {
+        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(p + '-page').classList.add('active-page');
+        document.getElementById('nav-' + p).classList.add('active');
+        if(p === 'dash') updateChart();
     }
+
     function updateChart() {
         const ctx = document.getElementById('myChart').getContext('2d');
         if (myChart) myChart.destroy();
@@ -158,21 +195,15 @@
             options: { plugins: { legend: { labels: { color: '#fff' } } } }
         });
     }
-    function resetStorage() { if(confirm("Clear all?")) { localStorage.clear(); location.reload(); } }
-    function clearAll() { display.value = "0"; }
-    function showGT() { display.value = expenseTotal; shouldReset = true; }
-    function plusMinus() { display.value = display.value.startsWith("-") ? display.value.slice(1) : "-" + display.value; }
-    function markUP() { display.value = (parseFloat(display.value) / 0.9).toFixed(2); shouldReset = true; }
+
+    function resetStorage() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
     function exportData() {
-        let csv = "Finance History\n" + historyLog.join("\n");
-        let a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-        a.download = 'History.csv'; a.click();
+        let csv = "Time,Category,Amount,Type\n" + historyLog.map(h => h.replace(': ₹', ',').replace(' (', ',').replace(')', '')).join("\n");
+        let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+        a.download = 'Finance_Pro.csv'; a.click();
     }
-    function checkForward() { if(historyLog.length > 0) { checkIndex = (checkIndex + 1) % historyLog.length; display.value = historyLog[checkIndex].split('₹')[1].split(' ')[0]; } }
-    function checkBackward() { if(historyLog.length > 0) { checkIndex = (checkIndex - 1 + historyLog.length) % historyLog.length; display.value = historyLog[checkIndex].split('₹')[1].split(' ')[0]; } }
+
     updateUI();
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 </script>
 </body>
 </html>
