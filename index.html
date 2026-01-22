@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <title>Citizen Finance Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #0a0a0a; --card: #111; --text: #fff; --primary: #00ffcc; --accent: #cc66ff; --border: #333; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; touch-action: manipulation; }
+        .nav { width: 100%; display: flex; justify-content: center; gap: 10px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav button { padding: 8px 15px; border: none; border-radius: 20px; background: var(--border); color: var(--text); cursor: pointer; font-weight: bold; font-size: 12px; }
+        .nav button.active { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); }
+        .page { display: none; width: 95%; max-width: 380px; padding: 20px 10px; animation: fadeIn 0.4s; }
+        .active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .calculator { background: #000; padding: 15px; border-radius: 25px; border: 3px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .display-container { position: relative; background: #111; border: 2px solid var(--primary); border-radius: 12px; margin-bottom: 15px; }
+        #display { width: 100%; height: 75px; font-size: 32px; text-align: right; padding: 25px 15px 5px 15px; background: transparent; color: var(--primary); border: none; outline: none; font-family: monospace; box-sizing: border-box; }
+        .buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        button { height: 45px; cursor: pointer; border: none; border-radius: 8px; background: #1a1a1a; color: white; font-weight: bold; font-size: 13px; }
+        button:active { transform: scale(0.9); filter: brightness(1.5); }
+        .btn-red { color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .btn-orange { color: #ffa500; border: 1px solid #ffa500; }
+        .btn-equal { background: var(--primary); color: #000; }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 15px; }
+        .cat-btn { font-size: 10px; height: 35px; border-radius: 5px; border: 1px solid #444; color: #fff; }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; margin-bottom: 15px; }
+        .history-list { max-height: 180px; overflow-y: auto; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 11px; border: 1px solid var(--border); text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <button id="nav-calc" class="active" onclick="switchPage('calc')">Calculator</button>
+    <button id="nav-dash" onclick="switchPage('dash')">Dashboard</button>
+</div>
+
+<div id="calc-page" class="page active-page">
+    <div class="calculator">
+        <div class="display-container"><input type="text" id="display" value="0" readonly></div>
+        <div class="buttons">
+            <button class="btn-orange" onclick="checkBackward()">◀</button>
+            <button class="btn-orange" onclick="checkForward()">▶</button>
+            <button class="btn-orange" onclick="showGT()">GT</button>
+            <button class="btn-orange" onclick="markUP()">MU</button>
+            <button class="btn-red" onclick="clearAll()">AC</button>
+            <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('%')">%</button><button class="btn-orange" onclick="press('/')">÷</button>
+            <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="plusMinus()">+/-</button><button class="btn-orange" onclick="press('*')">×</button>
+            <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button class="btn-equal" style="grid-row: span 2; height: auto;" onclick="calculate()">=</button><button class="btn-orange" onclick="press('-')">-</button>
+            <button onclick="press('0')">0</button><button onclick="press('00')">00</button><button onclick="press('.')">.</button><button class="btn-orange" onclick="press('+')">+</button>
+        </div>
+        <div class="category-grid">
+            <button class="cat-btn" style="background: #1b5e20;" onclick="saveEntry('Salary', 'income')">Salary</button>
+            <button class="cat-btn" style="background: #b71c1c;" onclick="saveEntry('Food', 'expense')">Food</button>
+            <button class="cat-btn" style="background: #4a148c;" onclick="saveEntry('Rent', 'expense')">Rent</button>
+            <button class="cat-btn" style="background: #01579b;" onclick="saveEntry('Bills', 'expense')">Bills</button>
+            <button class="cat-btn" style="background: #e65100;" onclick="saveEntry('Fuel', 'expense')">Fuel</button>
+            <button class="cat-btn" style="background: #37474f;" onclick="saveEntry('Other', 'expense')">Other</button>
+        </div>
+    </div>
+</div>
+
+<div id="dash-page" class="page">
+    <div class="stat-card"><canvas id="myChart"></canvas></div>
+    <div style="display: flex; gap: 10px;">
+        <div class="stat-card" style="flex: 1;"><h3>Income</h3><p id="dash-in" style="color: var(--primary);">₹0</p></div>
+        <div class="stat-card" style="flex: 1;"><h3>Expenses</h3><p id="dash-gt" style="color: #ff4d4d;">₹0</p></div>
+    </div>
+    <div class="history-list" id="history-list"></div>
+    <button style="width:100%; padding:12px; background:#28a745; color:white; border-radius:10px; margin-top: 10px; font-weight: bold; border:none;" onclick="exportData()">Export to CSV</button>
+    <button style="width:100%; margin-top:10px; padding:8px; background:transparent; color:#ff4d4d; border:1px solid #ff4d4d; border-radius:10px;" onclick="resetStorage()">Reset Data</button>
+</div>
+
+<script>
+    let income = parseFloat(localStorage.getItem('income')) || 0;
+    let expenseTotal = parseFloat(localStorage.getItem('expenseTotal')) || 0;
+    let historyLog = JSON.parse(localStorage.getItem('historyLog')) || [];
+    let shouldReset = false, myChart = null, checkIndex = -1;
+    const display = document.getElementById('display');
+
+    function speak(t) { const m = new SpeechSynthesisUtterance(t); m.rate = 1.3; window.speechSynthesis.speak(m); }
+    function switchPage(p) {
+        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(p + '-page').classList.add('active-page');
+        document.getElementById('nav-' + p).classList.add('active');
+        if(p === 'dash') updateChart();
+    }
+    function press(v) { 
+        if (shouldReset) { display.value = ""; shouldReset = false; }
+        if (display.value === "0" && v !== "." && v !== "00") display.value = "";
+        display.value += v;
+    }
+    function calculate() {
+        try {
+            let res = eval(display.value.replace(/×/g, '*').replace(/÷/g, '/'));
+            display.value = res; shouldReset = true; speak(res);
+        } catch { display.value = "Error"; }
+    }
+    function saveEntry(cat, type) {
+        let val = parseFloat(display.value);
+        if (isNaN(val) || val === 0) return alert("Enter value!");
+        let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (type === 'income') income += val; else expenseTotal += val;
+        historyLog.unshift(`${time} - ${cat}: ₹${val} (${type.toUpperCase()})`);
+        updateUI(); speak(val + " saved"); display.value = "0"; shouldReset = true;
+    }
+    function updateUI() {
+        document.getElementById('dash-in').innerText = "₹" + income.toFixed(2);
+        document.getElementById('dash-gt').innerText = "₹" + expenseTotal.toFixed(2);
+        document.getElementById('history-list').innerHTML = historyLog.map(h => `<div style="padding:6px; border-bottom:1px solid #222">${h}</div>`).join('');
+        localStorage.setItem('income', income);
+        localStorage.setItem('expenseTotal', expenseTotal);
+        localStorage.setItem('historyLog', JSON.stringify(historyLog));
+    }
+    function updateChart() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        if (myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: { labels: ['Income', 'Expenses'], datasets: [{ data: [income, expenseTotal], backgroundColor: ['#00ffcc', '#ff4d4d'] }] },
+            options: { plugins: { legend: { labels: { color: '#fff' } } } }
+        });
+    }
+    function resetStorage() { if(confirm("Clear all?")) { localStorage.clear(); location.reload(); } }
+    function clearAll() { display.value = "0"; }
+    function showGT() { display.value = expenseTotal; shouldReset = true; }
+    function plusMinus() { display.value = display.value.startsWith("-") ? display.value.slice(1) : "-" + display.value; }
+    function markUP() { display.value = (parseFloat(display.value) / 0.9).toFixed(2); shouldReset = true; }
+    function exportData() {
+        let csv = "Finance History\n" + historyLog.join("\n");
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+        a.download = 'History.csv'; a.click();
+    }
+    function checkForward() { if(historyLog.length > 0) { checkIndex = (checkIndex + 1) % historyLog.length; display.value = historyLog[checkIndex].split('₹')[1].split(' ')[0]; } }
+    function checkBackward() { if(historyLog.length > 0) { checkIndex = (checkIndex - 1 + historyLog.length) % historyLog.length; display.value = historyLog[checkIndex].split('₹')[1].split(' ')[0]; } }
+    updateUI();
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+</script>
+</body>
+</html>
