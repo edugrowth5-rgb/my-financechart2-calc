@@ -1,4 +1,4 @@
-const CACHE_NAME = 'citizen-force-v9'; // वर्जन बढ़ाकर v9 कर दिया है
+const CACHE_NAME = 'citizen-force-v10'; // वर्जन बढ़ाकर v9 कर दिया है
 const assets = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (e) => {
